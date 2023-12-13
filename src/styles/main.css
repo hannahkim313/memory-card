@@ -1,0 +1,17 @@
+/******************************************************************************/
+/* Selectors for general elements start here.
+/******************************************************************************/
+
+:root {
+  --color-text-1: #3d362a;
+  --color-text-1-inverted: #fff9e5;
+  --color-brand-1: #88c9a1;
+  --color-brand-2: #ff7c69;
+  --color-brand-3: #8ecfca;
+  --color-brand-4: #786951;
+  --color-brand-5: #f5c24c;
+}
+
+#root {
+  color: var(--color-text-1);
+}
