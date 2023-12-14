@@ -1,7 +1,7 @@
 import Card from './Card';
 
 const CardsDisplay = () => (
-  <section>
+  <section className="cards-container">
     <h2>Villager Cards</h2>
     <Card />
     <Card />
