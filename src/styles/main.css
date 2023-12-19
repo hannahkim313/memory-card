@@ -29,10 +29,16 @@ button:hover {
   cursor: pointer;
 }
 
-h2,
+h2:not(.visible),
 h3 {
   position: absolute;
   left: -999999999px;
+}
+
+h2.visible {
+  padding: 1rem;
+  background-color: var(--color-text-1-inverted);
+  border-radius: 0.5rem;
 }
 
 body {
