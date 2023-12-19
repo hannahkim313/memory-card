@@ -48,6 +48,11 @@ const CardsDisplay = () => {
     };
   }, [cardsData, indices]);
 
+  const handleOnClick = () => {
+    const shuffled = [...cardsData].sort(() => Math.random() - 0.5);
+    setCardsData(shuffled);
+  };
+
   return (
     <section className="cards-container">
       <h2>Villager Cards</h2>
@@ -56,7 +61,8 @@ const CardsDisplay = () => {
           <Card
             key={cardData.id}
             src={cardData.card.image}
-            villagerName={cardData.card.character}
+            villagerName={cardData.card.name}
+            onClick={handleOnClick}
           />
         ))
       ) : (

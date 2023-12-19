@@ -127,6 +127,7 @@ main {
 }
 
 .card button {
+  height: 100%;
   border: 2px solid transparent;
   border-radius: 0.5rem;
   display: flex;
@@ -139,7 +140,7 @@ main {
   background-color: var(--color-brand-1a);
 }
 
-.card button:focus {
+.card button:focus-visible {
   border: 2px solid var(--color-text-1);
   border-radius: 0.5rem;
 }
