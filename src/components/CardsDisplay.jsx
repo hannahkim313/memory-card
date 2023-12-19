@@ -27,6 +27,7 @@ const CardsDisplay = () => {
         const cardData = {
           card: amiiboData[index],
           id: uuidv4(),
+          hasClicked: false,
         };
         const newCardsData = [...cardsData, cardData];
         setCardsData(newCardsData);
@@ -48,8 +49,14 @@ const CardsDisplay = () => {
     };
   }, [cardsData, indices]);
 
-  const handleOnClick = () => {
-    const shuffled = [...cardsData].sort(() => Math.random() - 0.5);
+  const handleOnClick = (e) => {
+    const name = e.currentTarget.dataset.villagerName;
+    const newCardsData = [...cardsData];
+    const selectedCardData = newCardsData.find(
+      (cardData) => cardData.card.name === name
+    );
+    selectedCardData.hasClicked = true;
+    const shuffled = [...newCardsData].sort(() => Math.random() - 0.5);
     setCardsData(shuffled);
   };
 
