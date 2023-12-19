@@ -38,6 +38,7 @@ h3 {
 h2.visible {
   padding: 1rem;
   background-color: var(--color-text-1-inverted);
+  box-shadow: var(--bottom-box-shadow);
   border-radius: 0.5rem;
 }
 
