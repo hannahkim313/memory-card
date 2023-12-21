@@ -1,5 +1,7 @@
 # Memory Card Game: Animal Crossing Edition
 
+https://memory-card-ehz.pages.dev/
+
 ## Project Summary
 
 This project exercise, created by The Odin Project, is a simple memory card game to practice working with hooks to manage state and side effects while fetching and using data from an API.
