@@ -1,11 +1,33 @@
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import getRandomIntInclusive from '../utilities/helpers';
-import Scoreboard from './Scoreboard';
 
 const Main = () => {
   const [cardsData, setCardsData] = useState([]);
   const [indices, setIndices] = useState([]);
+  const [currRound, setRound] = useState(1);
+  const [currScore, setCurrScore] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
+  const [results, setResults] = useState({
+    isGameOver: false,
+    isWin: false,
+  });
+
+  const handleShuffle = (cards) => {
+    setCardsData([...cards].sort(() => Math.random() - 0.5));
+  };
+
+  const handleIncreaseBestScore = () => {
+    const newCurrScore = currScore + 1;
+
+    if (newCurrScore > bestScore) {
+      setBestScore(newCurrScore);
+    }
+  };
+
+  const handleResults = (isGameOver, isWin) => {
+    setResults({ ...results, isGameOver, isWin });
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -22,15 +44,13 @@ const Main = () => {
             amiibo.release.na && amiibo.release.na.split('-')[0] === '2021'
         );
         const index = getRandomIntInclusive(0, amiiboData.length - 1, indices);
-        const newIndices = [...indices, index];
-        setIndices(newIndices);
+        setIndices([...indices, index]);
         const cardData = {
           card: amiiboData[index],
           id: uuidv4(),
           hasClicked: false,
         };
-        const newCardsData = [...cardsData, cardData];
-        setCardsData(newCardsData);
+        setCardsData([...cardsData, cardData]);
       } catch (error) {
         if (error.name === 'AbortError') {
           console.log('Fetching data was aborted');
@@ -50,23 +70,78 @@ const Main = () => {
   }, [cardsData, indices]);
 
   const handleOnClick = (e) => {
-    const name = e.currentTarget.dataset.villagerName;
+    if (currRound === 8 && currScore === 8) {
+      setCurrScore(0);
+      setBestScore(0);
+      setRound(1);
+      handleResults(false, false);
+      setCardsData([]);
+      setIndices([]);
+
+      return;
+    }
+
     const newCardsData = [...cardsData];
     const selectedCardData = newCardsData.find(
-      (cardData) => cardData.card.name === name
+      (cardData) => cardData.card.name === e.currentTarget.dataset.villagerName
     );
-    selectedCardData.hasClicked = true;
-    const shuffled = [...newCardsData].sort(() => Math.random() - 0.5);
-    setCardsData(shuffled);
+
+    if (selectedCardData.hasClicked) {
+      setCurrScore(0);
+      setRound(1);
+      handleResults(true, false);
+      const resetCardsData = newCardsData.map((cardData) => ({
+        ...cardData,
+        hasClicked: false,
+      }));
+      handleShuffle(resetCardsData);
+    } else {
+      setCurrScore(currScore + 1);
+      handleIncreaseBestScore();
+
+      if (currRound === 8) {
+        handleResults(true, true);
+      } else {
+        selectedCardData.hasClicked = true;
+        setRound(currRound + 1);
+        handleShuffle(newCardsData);
+      }
+    }
   };
 
   return (
     <main>
-      {/* TODO: After a card has been clicked, increase the score if the card
-    hasn't been clicked else update the best score and display a game over
-    modal */}
-      <Scoreboard />
-      <h2 className="visible">Round 1/8</h2>
+      <article className="game-data">
+        <h2>Game Data</h2>
+        <p className="round">Round {currRound}/8</p>
+        <div className="scoreboard">
+          <p>Current score: {currScore}</p>
+          <p>Best score: {bestScore}</p>
+        </div>
+      </article>
+      {results.isWin ? (
+        <p
+          className={
+            results.isGameOver
+              ? 'game-over-message visible'
+              : 'game-over-message'
+          }
+        >
+          You won! Refresh the page or click on any card to reset the game and
+          play again with different cards.
+        </p>
+      ) : (
+        <p
+          className={
+            results.isGameOver
+              ? 'game-over-message visible'
+              : 'game-over-message'
+          }
+        >
+          You lost! Try again with the newly shuffled cards and beat your best
+          score.
+        </p>
+      )}
       <section className="cards-container">
         <h2>Villager Cards</h2>
         {cardsData.length === 8 ? (
