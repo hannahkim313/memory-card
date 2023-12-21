@@ -81,6 +81,10 @@ const Main = () => {
       return;
     }
 
+    if (currScore === 0 && bestScore < 8) {
+      handleResults(false, false);
+    }
+
     const newCardsData = [...cardsData];
     const selectedCardData = newCardsData.find(
       (cardData) => cardData.card.name === e.currentTarget.dataset.villagerName
